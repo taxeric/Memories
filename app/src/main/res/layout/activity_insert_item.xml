@@ -17,6 +17,7 @@
         android:layout_height="256dp"/>
 
     <Button
+        android:id="@+id/btnAdd"
         android:text="@string/add"
         android:layout_marginTop="56dp"
         android:layout_gravity="center_horizontal"
