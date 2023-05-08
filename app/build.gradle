@@ -1,6 +1,7 @@
 plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
+    id "kotlin-kapt"
 }
 
 android {
@@ -74,6 +75,12 @@ dependencies {
     //datastore
     def datastore_version = "1.0.0"
     implementation("androidx.datastore:datastore-preferences:$datastore_version")
+
+    //room
+    def room_version = "2.5.1"
+    implementation("androidx.room:room-runtime:$room_version")
+    annotationProcessor("androidx.room:room-compiler:$room_version")
+    kapt("androidx.room:room-compiler:$room_version")
 
     //navigation
     def nav_version = "2.5.3"
