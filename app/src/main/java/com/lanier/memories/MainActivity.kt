@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -18,6 +19,11 @@ class MainActivity : AppCompatActivity() {
             adapter = MA()
             layoutManager = GridLayoutManager(this@MainActivity, 2)
         }
+
+        findViewById<FloatingActionButton>(R.id.floatActionButton)
+            .setOnClickListener {
+                start<InsertItemAct> {  }
+            }
     }
 }
 
