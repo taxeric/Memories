@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shortcuts xmlns:android="http://schemas.android.com/apk/res/android">
+    <shortcut
+        android:shortcutId="insertMemories"
+        android:enabled="true"
+        android:icon="@drawable/baseline_add_photo_alternate_black_24"
+        android:shortcutShortLabel="@string/add">
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:targetPackage="com.lanier.memories"
+            android:targetClass="com.lanier.memories.InsertItemAct" />
+        <categories android:name="android.shortcut.conversation" />
+        <capability-binding android:key="actions.intent.CREATE_MESSAGE" />
+    </shortcut>
+</shortcuts>
