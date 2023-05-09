@@ -1,5 +1,7 @@
 <resources>
     <string name="app_name">Memories</string>
 
+    <string name="edit_name">名称</string>
+    <string name="edit_desc">描述</string>
     <string name="add">添加</string>
 </resources>

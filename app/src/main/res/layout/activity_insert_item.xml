@@ -16,11 +16,37 @@
         android:layout_width="256dp"
         android:layout_height="256dp"/>
 
-    <Button
-        android:id="@+id/btnAdd"
-        android:text="@string/add"
-        android:layout_marginTop="56dp"
-        android:layout_gravity="center_horizontal"
-        android:layout_width="256dp"
-        android:layout_height="wrap_content"/>
+    <ScrollView
+        android:layout_marginTop="24dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <androidx.compose.ui.platform.ComposeView
+                android:id="@+id/composeEditName"
+                android:layout_marginTop="24dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_width="256dp"
+                android:layout_height="wrap_content"/>
+
+            <androidx.compose.ui.platform.ComposeView
+                android:id="@+id/composeEditDesc"
+                android:layout_marginTop="12dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_width="256dp"
+                android:layout_height="wrap_content"/>
+
+            <Button
+                android:id="@+id/btnAdd"
+                android:text="@string/add"
+                android:layout_marginTop="24dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_width="256dp"
+                android:layout_height="wrap_content"/>
+        </LinearLayout>
+    </ScrollView>
 </LinearLayout>
