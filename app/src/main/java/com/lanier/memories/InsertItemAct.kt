@@ -53,6 +53,7 @@ class InsertItemAct : AppCompatActivity() {
                             .insertMemories(
                                 data
                             )
+                        RefreshItemFlow.tryEmit(RefreshItemFlow.value + 1)
                         finish()
                     }
                 }?: Toast.makeText(this, "无效", Toast.LENGTH_SHORT).show()
