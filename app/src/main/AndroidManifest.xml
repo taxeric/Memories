@@ -13,6 +13,10 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Memories"
         tools:targetApi="31">
+
+        <activity android:name=".MemoriesDetailsAct"
+            android:exported="false"
+            android:configChanges="orientation|uiMode"/>
         <activity
             android:name=".InsertItemAct"
             android:exported="false"

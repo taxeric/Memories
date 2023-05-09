@@ -107,6 +107,8 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun toMemoriesDetails(data: MemoriesData) {
+        MemoriesItemFlow.tryEmit(data)
+        start<MemoriesDetailsAct> {  }
     }
 }
 
