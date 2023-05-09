@@ -1,5 +1,6 @@
 package com.lanier.memories
 
+import android.content.DialogInterface
 import android.graphics.Color
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
@@ -7,6 +8,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -25,9 +27,7 @@ class MainActivity : AppCompatActivity() {
     private val refreshLayout by lazy {
         findViewById<SwipeRefreshLayout>(R.id.refreshLayout)
     }
-    private val mAdapter by lazy {
-        MA()
-    }
+    private lateinit var mAdapter: MA
 
     private val refreshFun = fun () {
         lifecycleScope
@@ -46,6 +46,17 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        mAdapter = MA(rv).apply {
+            listener = object : OnItemListener<MemoriesData> {
+                override fun onItemClickListener(index: Int, item: MemoriesData) {
+                    toMemoriesDetails(item)
+                }
+
+                override fun onItemLongClickListener(index: Int, item: MemoriesData) {
+                    deleteMemories(index, item)
+                }
+            }
+        }
         rv.apply {
             adapter = mAdapter
             layoutManager = GridLayoutManager(this@MainActivity, 2)
@@ -75,9 +86,41 @@ class MainActivity : AppCompatActivity() {
 
         RefreshItemFlow.tryEmit(1)
     }
+
+    private fun deleteMemories(index: Int, data: MemoriesData) {
+        val listener = DialogInterface.OnClickListener { _, which ->
+            if (which == DialogInterface.BUTTON_POSITIVE) {
+                lifecycleScope
+                    .launch {
+                        withContext(Dispatchers.IO) {
+                            MemoriesRoomHelper.deleteMemories(data)
+                        }
+                        withContext(Dispatchers.Main) {
+                            mAdapter
+                                .remove(index)
+                                .notifyItemRemoved(index)
+                        }
+                    }
+            }
+        }
+        AlertDialog.Builder(this)
+            .setTitle("delete?")
+            .setPositiveButton("确定", listener)
+            .setNegativeButton("取消", listener)
+            .show()
+    }
+
+    private fun toMemoriesDetails(data: MemoriesData) {
+    }
 }
 
-class MA: RecyclerView.Adapter<VH>() {
+class MA(
+    private val recyclerView: RecyclerView
+): RecyclerView.Adapter<VH>(),
+    View.OnClickListener,
+    View.OnLongClickListener {
+
+    var listener: OnItemListener<MemoriesData>? = null
 
     private val _data = mutableListOf<MemoriesData>()
     var data: List<MemoriesData>
@@ -87,6 +130,17 @@ class MA: RecyclerView.Adapter<VH>() {
             _data.addAll(value)
             notifyDataSetChanged()
         }
+
+    fun remove(index: Int): MA {
+        if (_data.isEmpty()) {
+            return this
+        }
+        if (index < 0 || index > _data.size - 1) {
+            return this
+        }
+        _data.removeAt(index)
+        return this
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): VH {
         return VH(
@@ -100,6 +154,21 @@ class MA: RecyclerView.Adapter<VH>() {
     override fun onBindViewHolder(holder: VH, position: Int) {
         val uri = Uri.parse(_data[position].path)
         holder.iv.setImageURI(uri)
+        holder.itemView
+            .setOnClickListener(this)
+        holder.itemView
+            .setOnLongClickListener(this)
+    }
+
+    override fun onClick(v: View) {
+        val index = recyclerView.getChildAdapterPosition(v)
+        listener?.onItemClickListener(index, _data[index])
+    }
+
+    override fun onLongClick(v: View): Boolean {
+        val index = recyclerView.getChildAdapterPosition(v)
+        listener?.onItemLongClickListener(index, _data[index])
+        return true
     }
 }
 
