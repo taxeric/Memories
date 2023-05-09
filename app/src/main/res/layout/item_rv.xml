@@ -14,5 +14,5 @@
         app:shapeAppearance="@style/CircleStyleCorner8Dp"
         app:layout_constraintTop_toTopOf="parent"
         android:layout_width="match_parent"
-        android:layout_height="128dp"/>
+        android:layout_height="196dp"/>
 </com.google.android.material.card.MaterialCardView>

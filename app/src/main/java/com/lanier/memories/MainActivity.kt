@@ -8,6 +8,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
@@ -15,11 +16,11 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.imageview.ShapeableImageView
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 class MainActivity : AppCompatActivity() {
+
+    private val vm by viewModels<MainVM>()
 
     private val rv by lazy {
         findViewById<RecyclerView>(R.id.recyclerView)
@@ -29,17 +30,16 @@ class MainActivity : AppCompatActivity() {
     }
     private lateinit var mAdapter: MA
 
-    private val refreshFun = fun () {
-        lifecycleScope
-            .launch {
-                refreshLayout.isRefreshing = true
-                val list = withContext(Dispatchers.IO) {
-                    MemoriesRoomHelper.getAllMemories()
-                }
-                mAdapter
-                    .data = list
+    private val refreshFunc = fun (showLoading: Boolean) {
+        if (showLoading) {
+            refreshLayout.isRefreshing = true
+        }
+        vm.getAllMemories { data ->
+            mAdapter.data = data
+            if (showLoading) {
                 refreshLayout.isRefreshing = false
             }
+        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -62,55 +62,53 @@ class MainActivity : AppCompatActivity() {
             layoutManager = GridLayoutManager(this@MainActivity, 2)
         }
         refreshLayout
-            .setColorSchemeColors(
-                Color.RED,
-                Color.GREEN,
-                Color.BLUE,
-            )
+            .apply {
+                setColorSchemeColors(
+                    Color.RED,
+                    Color.GREEN,
+                    Color.BLUE,
+                )
+                setOnRefreshListener {
+                    refreshFunc.invoke(true)
+                }
+            }
+
 
         findViewById<FloatingActionButton>(R.id.floatActionButton)
             .setOnClickListener {
                 start<InsertItemAct> {  }
             }
-        refreshLayout
-            .setOnRefreshListener {
-                refreshFun.invoke()
-            }
 
         lifecycleScope
             .launch {
                 RefreshItemFlow.collect {
-                    refreshFun.invoke()
+                    refreshFunc.invoke(false)
                 }
             }
 
-        RefreshItemFlow.tryEmit(1)
+        refreshFunc.invoke(true)
     }
 
     private fun deleteMemories(index: Int, data: MemoriesData) {
         val listener = DialogInterface.OnClickListener { _, which ->
             if (which == DialogInterface.BUTTON_POSITIVE) {
-                lifecycleScope
-                    .launch {
-                        withContext(Dispatchers.IO) {
-                            MemoriesRoomHelper.deleteMemories(data)
-                        }
-                        withContext(Dispatchers.Main) {
-                            mAdapter
-                                .remove(index)
-                                .notifyItemRemoved(index)
-                        }
-                    }
+                vm.deleteMemories(data) {
+                    mAdapter
+                        .remove(index)
+                        .notifyItemRemoved(index)
+                }
             }
         }
         AlertDialog.Builder(this)
-            .setTitle("delete?")
+            .setTitle("Delete?")
             .setPositiveButton("确定", listener)
             .setNegativeButton("取消", listener)
             .show()
     }
 
     private fun toMemoriesDetails(data: MemoriesData) {
+        MemoriesItemFlow.tryEmit(data)
+        start<MemoriesDetailsAct> {  }
     }
 }
 
@@ -152,8 +150,7 @@ class MA(
     override fun getItemCount() = _data.size
 
     override fun onBindViewHolder(holder: VH, position: Int) {
-        val uri = Uri.parse(_data[position].path)
-        holder.iv.setImageURI(uri)
+        holder.bind(_data[position])
         holder.itemView
             .setOnClickListener(this)
         holder.itemView
@@ -174,5 +171,10 @@ class MA(
 
 class VH(view: View): RecyclerView.ViewHolder(view) {
 
-    val iv = view.findViewById<ShapeableImageView>(R.id.ivPic)
+    private val iv = view.findViewById<ShapeableImageView>(R.id.ivPic)
+
+    fun bind(memoriesData: MemoriesData) {
+        val uri = Uri.parse(memoriesData.path)
+        iv.setImageURI(uri)
+    }
 }

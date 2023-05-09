@@ -8,11 +8,29 @@ import android.widget.Button
 import android.widget.Toast
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextFieldDefaults
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.lifecycleScope
 import com.google.android.material.imageview.ShapeableImageView
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class InsertItemAct : AppCompatActivity() {
 
@@ -21,6 +39,8 @@ class InsertItemAct : AppCompatActivity() {
     }
 
     private val pictureFlow = MutableStateFlow<Uri?>(null)
+    private var editName: String = ""
+    private var editDesc: String = ""
 
     private val selectPicResult = registerForActivityResult(
         ActivityResultContracts.PickVisualMedia()
@@ -43,20 +63,79 @@ class InsertItemAct : AppCompatActivity() {
             .setOnClickListener {
                 val uri = pictureFlow.value
                 uri?.let {
-                    lifecycleScope.launch(Dispatchers.IO) {
+                    lifecycleScope.launch {
                         val data = MemoriesData(
                             path = uri.toString(),
-                            name = "名字",
-                            desc = "描述"
+                            name = editName.ifEmpty { "default" },
+                            desc = editDesc.ifEmpty { "default" },
+                            time = System.currentTimeMillis(),
                         )
-                        MemoriesRoomHelper
-                            .insertMemories(
-                                data
-                            )
+                        withContext(Dispatchers.IO) {
+                            MemoriesRoomHelper
+                                .insertMemories(
+                                    data
+                                )
+                        }
                         RefreshItemFlow.tryEmit(RefreshItemFlow.value + 1)
                         finish()
                     }
                 }?: Toast.makeText(this, "无效", Toast.LENGTH_SHORT).show()
             }
+
+        findViewById<ComposeView>(R.id.composeEditName)
+            .setContent {
+                InsertItemSingleEditView(
+                    hint = stringResource(id = R.string.edit_name),
+                    onValueChanged = {
+                        editName = it
+                    }
+                )
+            }
+        findViewById<ComposeView>(R.id.composeEditDesc)
+            .setContent {
+                InsertItemSingleEditView(
+                    hint = stringResource(id = R.string.edit_desc),
+                    onValueChanged = {
+                        editDesc = it
+                    }
+                )
+            }
     }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun InsertItemSingleEditView(
+    modifier: Modifier = Modifier,
+    hint: String = "",
+    onValueChanged: (String) -> Unit,
+) {
+    var strKey by remember { mutableStateOf("") }
+    val dark = isSystemInDarkTheme()
+    OutlinedTextField(
+        value = strKey,
+        onValueChange = {
+            strKey = it
+            onValueChanged.invoke(it)
+        },
+        label = {
+            Text(
+                text = hint,
+                color = if (dark) Color.LightGray else Color.Gray,
+                fontSize = 12.sp,
+            )
+        },
+        singleLine = true,
+        leadingIcon = @Composable {
+            Icon(
+                painter = painterResource(id = R.drawable.baseline_favorite_border_24),
+                contentDescription = ""
+            )
+        },
+        colors = TextFieldDefaults.outlinedTextFieldColors(
+            textColor = if (dark) Color.LightGray else Color.Black,
+            cursorColor = if (dark) Color.LightGray else Color.Black,
+        ),
+        modifier = modifier
+    )
 }

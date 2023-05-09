@@ -1,5 +1,6 @@
 package com.lanier.memories
 
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 
 /**
@@ -8,3 +9,4 @@ import kotlinx.coroutines.flow.MutableStateFlow
  * Desc  :
  */
 val RefreshItemFlow = MutableStateFlow(0)
+val MemoriesItemFlow = MutableSharedFlow<MemoriesData>(replay = 1)
