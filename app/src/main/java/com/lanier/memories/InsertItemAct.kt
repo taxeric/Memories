@@ -1,5 +1,7 @@
 package com.lanier.memories
 
+import android.app.ActivityManager
+import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
@@ -77,7 +79,18 @@ class InsertItemAct : AppCompatActivity() {
                                 )
                         }
                         RefreshItemFlow.tryEmit(RefreshItemFlow.value + 1)
-                        finish()
+                        try {
+                            val ams = getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
+                            val tasks = ams.appTasks
+                            if (tasks.size == 1) {
+                                val task = tasks[0]
+                                if (task.taskInfo.numActivities == 1) {
+                                    start<MainActivity> {  }
+                                }
+                            }
+                        } finally {
+                            finish()
+                        }
                     }
                 }?: Toast.makeText(this, "无效", Toast.LENGTH_SHORT).show()
             }
