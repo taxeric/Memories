@@ -13,6 +13,7 @@ import com.google.android.material.imageview.ShapeableImageView
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class InsertItemAct : AppCompatActivity() {
 
@@ -43,16 +44,18 @@ class InsertItemAct : AppCompatActivity() {
             .setOnClickListener {
                 val uri = pictureFlow.value
                 uri?.let {
-                    lifecycleScope.launch(Dispatchers.IO) {
+                    lifecycleScope.launch {
                         val data = MemoriesData(
                             path = uri.toString(),
                             name = "名字",
                             desc = "描述"
                         )
-                        MemoriesRoomHelper
-                            .insertMemories(
-                                data
-                            )
+                        withContext(Dispatchers.IO) {
+                            MemoriesRoomHelper
+                                .insertMemories(
+                                    data
+                                )
+                        }
                         RefreshItemFlow.tryEmit(RefreshItemFlow.value + 1)
                         finish()
                     }

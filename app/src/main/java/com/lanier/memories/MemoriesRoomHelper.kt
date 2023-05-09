@@ -13,11 +13,11 @@ object MemoriesRoomHelper {
         return dao.getAllMemories()
     }
 
-    fun insertMemories(vararg memoriesData: MemoriesData) {
+    suspend fun insertMemories(vararg memoriesData: MemoriesData) {
         dao.insertMemories(*memoriesData)
     }
 
-    fun deleteMemories(memoriesData: MemoriesData) {
+    suspend fun deleteMemories(memoriesData: MemoriesData) {
         dao.deleteMemories(memoriesData)
     }
 }

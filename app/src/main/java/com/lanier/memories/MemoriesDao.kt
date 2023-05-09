@@ -17,8 +17,8 @@ interface MemoriesDao {
     fun getAllMemories(): List<MemoriesData>
 
     @Insert
-    fun insertMemories(vararg memoriesData: MemoriesData)
+    suspend fun insertMemories(vararg memoriesData: MemoriesData)
 
     @Delete
-    fun deleteMemories(memoriesData: MemoriesData)
+    suspend fun deleteMemories(memoriesData: MemoriesData)
 }
