@@ -28,6 +28,9 @@ abstract class MemoriesDatabase: RoomDatabase() {
         lateinit var db: MemoriesDatabase
 
         fun initDb(context: Context) {
+            if (::db.isInitialized) {
+                return
+            }
             synchronized(this) {
                 val instance = Room
                     .databaseBuilder(context, MemoriesDatabase::class.java, DATABASE_NAME)

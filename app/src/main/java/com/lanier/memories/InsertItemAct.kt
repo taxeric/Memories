@@ -7,7 +7,7 @@ import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
-import android.widget.Toast
+import android.widget.CheckBox
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.isSystemInDarkTheme
@@ -29,6 +29,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.lifecycleScope
 import com.google.android.material.imageview.ShapeableImageView
+import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
@@ -38,6 +39,9 @@ class InsertItemAct : AppCompatActivity() {
 
     private val ivPic by lazy {
         findViewById<ShapeableImageView>(R.id.ivPic)
+    }
+    private val cbShowInGlance by lazy {
+        findViewById<CheckBox>(R.id.cbShowInGlance)
     }
 
     private val pictureFlow = MutableStateFlow<Uri?>(null)
@@ -71,6 +75,8 @@ class InsertItemAct : AppCompatActivity() {
                             name = editName.ifEmpty { "default" },
                             desc = editDesc.ifEmpty { "default" },
                             time = System.currentTimeMillis(),
+                            favourite = true,
+                            showInGlance = cbShowInGlance.isChecked
                         )
                         withContext(Dispatchers.IO) {
                             MemoriesRoomHelper
@@ -92,7 +98,9 @@ class InsertItemAct : AppCompatActivity() {
                             finish()
                         }
                     }
-                }?: Toast.makeText(this, "无效", Toast.LENGTH_SHORT).show()
+                }?: Snackbar
+                    .make(findViewById(android.R.id.content), "invalid", Snackbar.LENGTH_SHORT)
+                    .show()
             }
 
         findViewById<ComposeView>(R.id.composeEditName)

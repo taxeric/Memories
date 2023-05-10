@@ -16,4 +16,6 @@ data class MemoriesData(
     @ColumnInfo(name = "pic_name") val name: String,
     @ColumnInfo(name = "pic_time") val time: Long = 0L,
     @ColumnInfo(name = "desc") val desc: String = "",
+    @ColumnInfo(name = "favourite") val favourite: Boolean = false,
+    @ColumnInfo(name = "show_in_glance") val showInGlance: Boolean = false,
 )
