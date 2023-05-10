@@ -3,6 +3,7 @@ package com.lanier.memories
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import kotlinx.serialization.Serializable
 
 /**
  * Author: Turtledove
@@ -10,6 +11,7 @@ import androidx.room.PrimaryKey
  * Desc  :
  */
 @Entity(tableName = "our_memories")
+@Serializable
 data class MemoriesData(
     @PrimaryKey(autoGenerate = true) val id: Int = 0,
     @ColumnInfo(name = "pic_path") val path: String,

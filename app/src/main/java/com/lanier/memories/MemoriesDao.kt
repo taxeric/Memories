@@ -16,10 +16,10 @@ interface MemoriesDao {
     @Query("select * from our_memories")
     fun getAllMemories(): List<MemoriesData>
 
-    @Query("select * from our_memories where favourite = 'true'")
+    @Query("select * from our_memories where favourite = 1")
     suspend fun getMemoriesByFavourite(): List<MemoriesData>
 
-    @Query("select * from our_memories where show_in_glance = 'true'")
+    @Query("select * from our_memories where show_in_glance = 1")
     suspend fun getMemoriesByShowInGlance(): List<MemoriesData>
 
     @Insert
