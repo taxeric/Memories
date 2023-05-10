@@ -6,6 +6,9 @@ import androidx.datastore.core.Serializer
 import androidx.datastore.dataStore
 import androidx.datastore.dataStoreFile
 import androidx.glance.state.GlanceStateDefinition
+import kotlinx.serialization.decodeFromString
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
 import java.io.File
 import java.io.InputStream
 import java.io.OutputStream
@@ -33,11 +36,15 @@ object MemoriesGlanceDefinition: GlanceStateDefinition<List<MemoriesData>> {
             get() = emptyList()
 
         override suspend fun readFrom(input: InputStream): List<MemoriesData> {
-            TODO("Not yet implemented")
+            return Json.decodeFromString(input.readBytes().decodeToString())
         }
 
         override suspend fun writeTo(t: List<MemoriesData>, output: OutputStream) {
-            TODO("Not yet implemented")
+            output.use {
+                it.write(
+                    Json.encodeToString(t).encodeToByteArray()
+                )
+            }
         }
     }
 }
