@@ -2,6 +2,7 @@ plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
     id "kotlin-kapt"
+    id 'org.jetbrains.kotlin.plugin.serialization' version "1.6.0"
 }
 
 android {
@@ -98,4 +99,8 @@ dependencies {
     //work manager
     def work_manager_version = "2.8.1"
     implementation("androidx.work:work-runtime-ktx:$work_manager_version")
+
+    //serialization
+    def serialization_version = "1.4.1"
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:$serialization_version")
 }
