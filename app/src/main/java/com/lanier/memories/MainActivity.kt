@@ -1,5 +1,6 @@
 package com.lanier.memories
 
+import android.animation.ValueAnimator
 import android.content.DialogInterface
 import android.graphics.Color
 import android.net.Uri
@@ -29,6 +30,13 @@ class MainActivity : AppCompatActivity() {
         findViewById<SwipeRefreshLayout>(R.id.refreshLayout)
     }
     private lateinit var mAdapter: MA
+    private lateinit var mLayoutManager: GridLayoutManager
+
+    private val fabScrollToTop by lazy {
+        findViewById<FloatingActionButton>(R.id.fabScrollToTop)
+    }
+    private lateinit var fabScrollEnterAnim: ValueAnimator
+    private lateinit var fabScrollExitAnim: ValueAnimator
 
     private val refreshFunc = fun (showLoading: Boolean) {
         if (showLoading) {
@@ -57,9 +65,11 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         }
+        mLayoutManager = GridLayoutManager(this@MainActivity, 2)
         rv.apply {
             adapter = mAdapter
-            layoutManager = GridLayoutManager(this@MainActivity, 2)
+            layoutManager = mLayoutManager
+            addOnScrollListener(rvScrollListener)
         }
         refreshLayout
             .apply {
@@ -73,10 +83,30 @@ class MainActivity : AppCompatActivity() {
                 }
             }
 
+        fabScrollEnterAnim = ValueAnimator.ofFloat(200f, 0f).apply {
+            addUpdateListener { listener ->
+                fabScrollToTop.translationX = listener.animatedValue as Float
+            }
+        }
+        fabScrollExitAnim = ValueAnimator.ofFloat(0f, 200f).apply {
+            addUpdateListener { listener ->
+                val value = listener.animatedValue as Float
+                fabScrollToTop.translationX = value
+                if (value == 200f) {
+                    fabScrollToTop.invisible()
+                }
+            }
+        }
 
-        findViewById<FloatingActionButton>(R.id.floatActionButton)
+        findViewById<FloatingActionButton>(R.id.fabAdd)
             .setOnClickListener {
                 start<InsertItemAct> {  }
+            }
+        fabScrollToTop
+            .setOnClickListener {
+                if (mAdapter.modelCount != 0) {
+                    rv.smoothScrollToPosition2(0, mLayoutManager)
+                }
             }
 
         lifecycleScope
@@ -87,6 +117,26 @@ class MainActivity : AppCompatActivity() {
             }
 
         refreshFunc.invoke(true)
+    }
+
+    private val rvScrollListener = object : RecyclerView.OnScrollListener() {
+
+        private var slideDown = true
+
+        override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+            if (newState == RecyclerView.SCROLL_STATE_IDLE) {
+                if (slideDown && fabScrollToTop.visibility == View.INVISIBLE) {
+                    fabScrollEnterAnim.start()
+                    fabScrollToTop.visible()
+                } else if (!slideDown && mLayoutManager.findFirstVisibleItemPosition() == 0) {
+                    fabScrollExitAnim.start()
+                }
+            }
+        }
+
+        override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+            slideDown = dy > 0
+        }
     }
 
     private fun deleteMemories(index: Int, data: MemoriesData) {
@@ -128,6 +178,9 @@ class MA(
             _data.addAll(value)
             notifyDataSetChanged()
         }
+
+    val modelCount: Int
+        get() = _data.size
 
     fun remove(index: Int): MA {
         if (_data.isEmpty()) {
