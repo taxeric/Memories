@@ -1,4 +1,4 @@
-package com.lanier.memories
+package com.lanier.memories.module
 
 import android.animation.ValueAnimator
 import android.content.DialogInterface
@@ -18,9 +18,16 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.imageview.ShapeableImageView
+import com.lanier.memories.MemoriesItemFlow
+import com.lanier.memories.entity.OnItemListener
+import com.lanier.memories.R
+import com.lanier.memories.RefreshItemFlow
+import com.lanier.memories.entity.MemoriesData
+import com.lanier.memories.invisible
+import com.lanier.memories.smoothScrollToPosition2
+import com.lanier.memories.start
+import com.lanier.memories.visible
 import kotlinx.coroutines.launch
-import java.io.File
-import java.io.FileNotFoundException
 
 class MainActivity : AppCompatActivity() {
 
@@ -128,7 +135,7 @@ class MainActivity : AppCompatActivity() {
 
         override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
             if (newState == RecyclerView.SCROLL_STATE_IDLE) {
-                if (slideDown && fabScrollToTop.visibility == View.INVISIBLE) {
+                if (slideDown && fabScrollToTop.visibility == View.INVISIBLE && mAdapter.modelCount != 0) {
                     fabScrollEnterAnim.start()
                     fabScrollToTop.visible()
                 } else if (!slideDown && mLayoutManager.findFirstVisibleItemPosition() == 0) {

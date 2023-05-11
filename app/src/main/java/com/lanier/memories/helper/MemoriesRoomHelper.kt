@@ -1,4 +1,7 @@
-package com.lanier.memories
+package com.lanier.memories.helper
+
+import com.lanier.memories.entity.MemoriesData
+import com.lanier.memories.repository.MemoriesDatabase
 
 /**
  * Author: Turtledove

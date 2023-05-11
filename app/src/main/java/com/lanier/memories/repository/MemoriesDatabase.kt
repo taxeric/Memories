@@ -1,9 +1,10 @@
-package com.lanier.memories
+package com.lanier.memories.repository
 
 import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import com.lanier.memories.entity.MemoriesData
 
 /**
  * Author: Turtledove
@@ -28,7 +29,7 @@ abstract class MemoriesDatabase: RoomDatabase() {
         lateinit var db: MemoriesDatabase
 
         fun initDb(context: Context) {
-            if (::db.isInitialized) {
+            if (Companion::db.isInitialized) {
                 return
             }
             synchronized(this) {

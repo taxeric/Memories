@@ -1,5 +1,6 @@
 package com.lanier.memories
 
+import com.lanier.memories.entity.MemoriesData
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 

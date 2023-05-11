@@ -1,6 +1,7 @@
 package com.lanier.memories
 
 import android.app.Application
+import com.lanier.memories.repository.MemoriesDatabase
 
 /**
  * Author: Turtledove

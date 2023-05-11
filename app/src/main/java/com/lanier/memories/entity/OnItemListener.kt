@@ -1,4 +1,4 @@
-package com.lanier.memories
+package com.lanier.memories.entity
 
 /**
  * Created by Eric

@@ -1,7 +1,9 @@
-package com.lanier.memories
+package com.lanier.memories.module
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.lanier.memories.helper.MemoriesRoomHelper
+import com.lanier.memories.entity.MemoriesData
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -19,8 +21,7 @@ class MainVM: ViewModel() {
         viewModelScope
             .launch {
                 val list = withContext(Dispatchers.IO) {
-                    MemoriesRoomHelper
-                        .getAllMemories()
+                    MemoriesRoomHelper.getAllMemories()
                 }
                 withContext(Dispatchers.Main) {
                     callback.invoke(list)
@@ -35,8 +36,7 @@ class MainVM: ViewModel() {
         viewModelScope
             .launch {
                 withContext(Dispatchers.IO) {
-                    MemoriesRoomHelper
-                        .deleteMemories(memoriesData)
+                    MemoriesRoomHelper.deleteMemories(memoriesData)
                 }
                 withContext(Dispatchers.Main) {
                     callback.invoke()

@@ -1,4 +1,4 @@
-package com.lanier.memories
+package com.lanier.memories.glance
 
 import android.content.Context
 import androidx.glance.appwidget.GlanceAppWidgetManager
@@ -9,6 +9,7 @@ import androidx.work.ExistingPeriodicWorkPolicy
 import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
 import androidx.work.WorkerParameters
+import com.lanier.memories.repository.MemoriesDatabase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.time.Duration

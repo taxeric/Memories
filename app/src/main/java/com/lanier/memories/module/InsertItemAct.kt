@@ -1,4 +1,4 @@
-package com.lanier.memories
+package com.lanier.memories.module
 
 import android.app.ActivityManager
 import android.content.ContentValues
@@ -35,6 +35,11 @@ import androidx.lifecycle.lifecycleScope
 import com.google.android.material.imageview.ShapeableImageView
 import com.google.android.material.materialswitch.MaterialSwitch
 import com.google.android.material.snackbar.Snackbar
+import com.lanier.memories.helper.MemoriesRoomHelper
+import com.lanier.memories.R
+import com.lanier.memories.RefreshItemFlow
+import com.lanier.memories.entity.MemoriesData
+import com.lanier.memories.start
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
@@ -104,10 +109,9 @@ class InsertItemAct : AppCompatActivity() {
                             showInGlance = msShowInGlance.isChecked
                         )
                         withContext(Dispatchers.IO) {
-                            MemoriesRoomHelper
-                                .insertMemories(
-                                    data
-                                )
+                            MemoriesRoomHelper.insertMemories(
+                                data
+                            )
                         }
                         RefreshItemFlow.tryEmit(RefreshItemFlow.value + 1)
                         try {

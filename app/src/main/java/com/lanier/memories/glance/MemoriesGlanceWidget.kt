@@ -1,4 +1,4 @@
-package com.lanier.memories
+package com.lanier.memories.glance
 
 import android.graphics.Bitmap
 import android.graphics.ImageDecoder
@@ -41,6 +41,9 @@ import androidx.glance.text.Text
 import androidx.glance.text.TextAlign
 import androidx.glance.text.TextDecoration
 import androidx.glance.text.TextStyle
+import com.lanier.memories.module.MainActivity
+import com.lanier.memories.entity.MemoriesData
+import com.lanier.memories.module.MemoriesDetailsAct
 
 /**
  * Author: Turtledove

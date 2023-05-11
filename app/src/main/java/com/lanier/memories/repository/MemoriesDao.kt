@@ -1,9 +1,10 @@
-package com.lanier.memories
+package com.lanier.memories.repository
 
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
+import com.lanier.memories.entity.MemoriesData
 
 /**
  * Author: Turtledove

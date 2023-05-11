@@ -14,15 +14,15 @@
         android:theme="@style/Theme.Memories"
         tools:targetApi="31">
 
-        <activity android:name=".MemoriesDetailsAct"
+        <activity android:name=".module.MemoriesDetailsAct"
             android:exported="false"
             android:configChanges="orientation|uiMode"/>
         <activity
-            android:name=".InsertItemAct"
+            android:name=".module.InsertItemAct"
             android:exported="false"
             android:configChanges="orientation|uiMode"/>
         <activity
-            android:name=".MainActivity"
+            android:name=".module.MainActivity"
             android:exported="true"
             android:configChanges="orientation|uiMode"
             android:launchMode="singleTask">
@@ -36,7 +36,7 @@
                 android:resource="@xml/shortcuts"/>
         </activity>
 
-        <receiver android:name=".MemoriesGlanceReceiver"
+        <receiver android:name=".glance.MemoriesGlanceReceiver"
             android:enabled="@bool/glance_appwidget_available"
             android:exported="false">
 

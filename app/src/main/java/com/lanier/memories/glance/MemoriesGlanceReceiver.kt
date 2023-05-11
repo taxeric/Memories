@@ -1,4 +1,4 @@
-package com.lanier.memories
+package com.lanier.memories.glance
 
 import android.content.Context
 import androidx.glance.appwidget.GlanceAppWidget
