@@ -19,6 +19,7 @@ import androidx.glance.action.ActionParameters
 import androidx.glance.action.actionParametersOf
 import androidx.glance.action.actionStartActivity
 import androidx.glance.appwidget.GlanceAppWidget
+import androidx.glance.appwidget.cornerRadius
 import androidx.glance.background
 import androidx.glance.color.dynamicThemeColorProviders
 import androidx.glance.currentState
@@ -110,6 +111,7 @@ class MemoriesGlanceWidget: GlanceAppWidget() {
                         contentDescription = "",
                         modifier = GlanceModifier
                             .size(50.dp)
+                            .cornerRadius(8.dp)
                     )
                     Spacer(
                         modifier = GlanceModifier
