@@ -1,7 +1,9 @@
 <resources>
     <string name="app_name">Memories</string>
 
+    <string name="crop_choose_after">选择后裁切(勿删文件)</string>
     <string name="show_in_glance">在小部件中显示</string>
+    <string name="tag_favourite">标记为喜欢</string>
     <string name="edit_name">名称</string>
     <string name="edit_desc">描述</string>
     <string name="add">添加</string>

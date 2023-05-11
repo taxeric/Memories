@@ -26,10 +26,27 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <CheckBox
-                android:id="@+id/cbShowInGlance"
+            <com.google.android.material.materialswitch.MaterialSwitch
+                android:id="@+id/msCrop"
+                android:text="@string/crop_choose_after"
+                android:layout_marginTop="12dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_width="256dp"
+                android:layout_height="wrap_content"/>
+
+            <com.google.android.material.materialswitch.MaterialSwitch
+                android:id="@+id/msShowInGlance"
                 android:text="@string/show_in_glance"
-                android:layout_marginTop="24dp"
+                android:layout_marginTop="4dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_width="256dp"
+                android:layout_height="wrap_content"/>
+
+            <com.google.android.material.materialswitch.MaterialSwitch
+                android:id="@+id/msTagFavorite"
+                android:checked="true"
+                android:text="@string/tag_favourite"
+                android:layout_marginTop="4dp"
                 android:layout_gravity="center_horizontal"
                 android:layout_width="256dp"
                 android:layout_height="wrap_content"/>

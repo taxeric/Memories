@@ -2,6 +2,7 @@ package com.lanier.memories
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
+import androidx.room.Ignore
 import androidx.room.PrimaryKey
 import kotlinx.serialization.Serializable
 
@@ -20,4 +21,7 @@ data class MemoriesData(
     @ColumnInfo(name = "desc") val desc: String = "",
     @ColumnInfo(name = "favourite") val favourite: Boolean = false,
     @ColumnInfo(name = "show_in_glance") val showInGlance: Boolean = false,
-)
+) {
+
+    @Ignore var uriValid: Boolean = true
+}

@@ -10,6 +10,7 @@ import android.view.WindowManager
 import android.widget.TextView
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
+import androidx.documentfile.provider.DocumentFile
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
@@ -55,17 +56,11 @@ class MemoriesDetailsAct: AppCompatActivity() {
                 repeatOnLifecycle(Lifecycle.State.STARTED) {
                     if (mMemoriesDataId == -1) {
                         MemoriesItemFlow.collect {
-                            toolbar.title = it.name
-                            ivPic.setImageURI(Uri.parse(it.path))
-                            tvTime.text = it.time.toTime()
-                            tvDesc.text = it.desc
+                            bindMemories(it)
                         }
                     } else {
                         val memoriesData = MemoriesRoomHelper.getMemoriesById(mMemoriesDataId)
-                        toolbar.title = memoriesData.name
-                        ivPic.setImageURI(Uri.parse(memoriesData.path))
-                        tvTime.text = memoriesData.time.toTime()
-                        tvDesc.text = memoriesData.desc
+                        bindMemories(memoriesData)
                     }
                 }
             }
@@ -94,6 +89,20 @@ class MemoriesDetailsAct: AppCompatActivity() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             val sui = window.decorView.systemUiVisibility or View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
             window.decorView.systemUiVisibility = sui
+        }
+    }
+
+    private fun bindMemories(memoriesData: MemoriesData) {
+        val uri = Uri.parse(memoriesData.path)
+        toolbar.title = memoriesData.name
+        tvTime.text = memoriesData.time.toTime()
+        tvDesc.text = memoriesData.desc
+        DocumentFile.fromSingleUri(this, uri)?.let {
+            if (it.exists()) {
+                ivPic.setImageURI(uri)
+            } else {
+                ivPic.setImageResource(R.drawable.ic_not_found)
+            }
         }
     }
 }

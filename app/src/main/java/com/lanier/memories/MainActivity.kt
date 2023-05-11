@@ -11,6 +11,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
+import androidx.documentfile.provider.DocumentFile
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -18,6 +19,8 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.imageview.ShapeableImageView
 import kotlinx.coroutines.launch
+import java.io.File
+import java.io.FileNotFoundException
 
 class MainActivity : AppCompatActivity() {
 
@@ -57,7 +60,7 @@ class MainActivity : AppCompatActivity() {
         mAdapter = MA(rv).apply {
             listener = object : OnItemListener<MemoriesData> {
                 override fun onItemClickListener(index: Int, item: MemoriesData) {
-                    toMemoriesDetails(item)
+                    toMemoriesDetails(index, item)
                 }
 
                 override fun onItemLongClickListener(index: Int, item: MemoriesData) {
@@ -156,7 +159,14 @@ class MainActivity : AppCompatActivity() {
             .show()
     }
 
-    private fun toMemoriesDetails(data: MemoriesData) {
+    private fun toMemoriesDetails(index: Int, data: MemoriesData) {
+        val uri = Uri.parse(data.path)
+        DocumentFile.fromSingleUri(this, uri)?.let {
+            if (!it.exists()) {
+                data.uriValid = false
+                mAdapter.notifyItemChanged(index)
+            }
+        }
         MemoriesItemFlow.tryEmit(data)
         start<MemoriesDetailsAct> {  }
     }
@@ -227,7 +237,11 @@ class VH(view: View): RecyclerView.ViewHolder(view) {
     private val iv = view.findViewById<ShapeableImageView>(R.id.ivPic)
 
     fun bind(memoriesData: MemoriesData) {
-        val uri = Uri.parse(memoriesData.path)
-        iv.setImageURI(uri)
+        if (memoriesData.uriValid) {
+            val uri = Uri.parse(memoriesData.path)
+            iv.setImageURI(uri)
+        } else {
+            iv.setImageResource(R.drawable.ic_not_found)
+        }
     }
 }
