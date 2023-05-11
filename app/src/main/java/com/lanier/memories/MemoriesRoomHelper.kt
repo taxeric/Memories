@@ -13,6 +13,10 @@ object MemoriesRoomHelper {
         return dao.getAllMemories()
     }
 
+    suspend fun getMemoriesById(id: Int): MemoriesData {
+        return dao.getMemoriesById(id)
+    }
+
     suspend fun insertMemories(vararg memoriesData: MemoriesData) {
         dao.insertMemories(*memoriesData)
     }

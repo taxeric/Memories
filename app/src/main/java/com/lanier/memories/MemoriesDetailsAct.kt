@@ -38,6 +38,8 @@ class MemoriesDetailsAct: AppCompatActivity() {
         findViewById<TextView>(R.id.tvDesc)
     }
 
+    private var mMemoriesDataId = -1
+
     @RequiresApi(Build.VERSION_CODES.R)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -45,14 +47,25 @@ class MemoriesDetailsAct: AppCompatActivity() {
 
         immersive()
 
+        println(">>>> $intent")
+        mMemoriesDataId = intent.getIntExtra("M_ID", -1)
+
         lifecycleScope
             .launch {
                 repeatOnLifecycle(Lifecycle.State.STARTED) {
-                    MemoriesItemFlow.collect {
-                        toolbar.title = it.name
-                        ivPic.setImageURI(Uri.parse(it.path))
-                        tvTime.text = it.time.toTime()
-                        tvDesc.text = it.desc
+                    if (mMemoriesDataId == -1) {
+                        MemoriesItemFlow.collect {
+                            toolbar.title = it.name
+                            ivPic.setImageURI(Uri.parse(it.path))
+                            tvTime.text = it.time.toTime()
+                            tvDesc.text = it.desc
+                        }
+                    } else {
+                        val memoriesData = MemoriesRoomHelper.getMemoriesById(mMemoriesDataId)
+                        toolbar.title = memoriesData.name
+                        ivPic.setImageURI(Uri.parse(memoriesData.path))
+                        tvTime.text = memoriesData.time.toTime()
+                        tvDesc.text = memoriesData.desc
                     }
                 }
             }
