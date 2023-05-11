@@ -64,13 +64,13 @@ class InsertItemAct : AppCompatActivity() {
         ActivityResultContracts.PickVisualMedia()
     ) {
         it?.let { uri ->
+            contentResolver.takePersistableUriPermission(
+                uri,
+                Intent.FLAG_GRANT_READ_URI_PERMISSION
+            )
             if (!msCrop.isChecked) {
                 bindUri(uri)
             } else {
-                contentResolver.takePersistableUriPermission(
-                    uri,
-                    Intent.FLAG_GRANT_READ_URI_PERMISSION
-                )
                 cropPictureUri(uri)
             }
         }
