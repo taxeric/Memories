@@ -22,6 +22,9 @@ interface MemoriesDao {
     @Query("select * from our_memories where show_in_glance = 1")
     suspend fun getMemoriesByShowInGlance(): List<MemoriesData>
 
+    @Query("select * from our_memories where id = :mId")
+    suspend fun getMemoriesById(mId: Int): MemoriesData
+
     @Insert
     suspend fun insertMemories(vararg memoriesData: MemoriesData)
 
