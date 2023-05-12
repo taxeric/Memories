@@ -2,6 +2,60 @@
     <!-- Base application theme. -->
     <style name="Base.Theme.Memories" parent="Theme.Material3.DayNight.NoActionBar">
         <!-- Customize your dark theme here. -->
-        <!-- <item name="colorPrimary">@color/my_dark_primary</item> -->
+        <item name="colorPrimary">@color/md_theme_dark_primary_default</item>
+        <item name="colorOnPrimary">@color/md_theme_dark_onPrimary_default</item>
+        <item name="colorPrimaryContainer">@color/md_theme_dark_primaryContainer_default</item>
+        <item name="colorOnPrimaryContainer">@color/md_theme_dark_onPrimaryContainer_default</item>
+        <item name="colorSecondary">@color/md_theme_dark_secondary_default</item>
+        <item name="colorOnSecondary">@color/md_theme_dark_onSecondary_default</item>
+        <item name="colorSecondaryContainer">@color/md_theme_dark_secondaryContainer_default</item>
+        <item name="colorOnSecondaryContainer">@color/md_theme_dark_onSecondaryContainer_default</item>
+        <item name="colorTertiary">@color/md_theme_dark_tertiary_default</item>
+        <item name="colorOnTertiary">@color/md_theme_dark_onTertiary_default</item>
+        <item name="colorTertiaryContainer">@color/md_theme_dark_tertiaryContainer_default</item>
+        <item name="colorOnTertiaryContainer">@color/md_theme_dark_onTertiaryContainer_default</item>
+        <item name="colorError">@color/md_theme_dark_error_default</item>
+        <item name="colorErrorContainer">@color/md_theme_dark_errorContainer_default</item>
+        <item name="colorOnError">@color/md_theme_dark_onError_default</item>
+        <item name="colorOnErrorContainer">@color/md_theme_dark_onErrorContainer_default</item>
+        <item name="android:colorBackground">@color/md_theme_dark_background_default</item>
+        <item name="colorOnBackground">@color/md_theme_dark_onBackground_default</item>
+        <item name="colorSurface">@color/md_theme_dark_surface_default</item>
+        <item name="colorOnSurface">@color/md_theme_dark_onSurface_default</item>
+        <item name="colorSurfaceVariant">@color/md_theme_dark_surfaceVariant_default</item>
+        <item name="colorOnSurfaceVariant">@color/md_theme_dark_onSurfaceVariant_default</item>
+        <item name="colorOutline">@color/md_theme_dark_outline_default</item>
+        <item name="colorOnSurfaceInverse">@color/md_theme_dark_inverseOnSurface_default</item>
+        <item name="colorSurfaceInverse">@color/md_theme_dark_inverseSurface_default</item>
+        <item name="colorPrimaryInverse">@color/md_theme_dark_inversePrimary_default</item>
+    </style>
+
+    <style name="Base.Theme.Blue" parent="Base.Theme.Memories">
+        <item name="colorPrimary">@color/md_theme_dark_primary</item>
+        <item name="colorOnPrimary">@color/md_theme_dark_onPrimary</item>
+        <item name="colorPrimaryContainer">@color/md_theme_dark_primaryContainer</item>
+        <item name="colorOnPrimaryContainer">@color/md_theme_dark_onPrimaryContainer</item>
+        <item name="colorSecondary">@color/md_theme_dark_secondary</item>
+        <item name="colorOnSecondary">@color/md_theme_dark_onSecondary</item>
+        <item name="colorSecondaryContainer">@color/md_theme_dark_secondaryContainer</item>
+        <item name="colorOnSecondaryContainer">@color/md_theme_dark_onSecondaryContainer</item>
+        <item name="colorTertiary">@color/md_theme_dark_tertiary</item>
+        <item name="colorOnTertiary">@color/md_theme_dark_onTertiary</item>
+        <item name="colorTertiaryContainer">@color/md_theme_dark_tertiaryContainer</item>
+        <item name="colorOnTertiaryContainer">@color/md_theme_dark_onTertiaryContainer</item>
+        <item name="colorError">@color/md_theme_dark_error</item>
+        <item name="colorErrorContainer">@color/md_theme_dark_errorContainer</item>
+        <item name="colorOnError">@color/md_theme_dark_onError</item>
+        <item name="colorOnErrorContainer">@color/md_theme_dark_onErrorContainer</item>
+        <item name="android:colorBackground">@color/md_theme_dark_background</item>
+        <item name="colorOnBackground">@color/md_theme_dark_onBackground</item>
+        <item name="colorSurface">@color/md_theme_dark_surface</item>
+        <item name="colorOnSurface">@color/md_theme_dark_onSurface</item>
+        <item name="colorSurfaceVariant">@color/md_theme_dark_surfaceVariant</item>
+        <item name="colorOnSurfaceVariant">@color/md_theme_dark_onSurfaceVariant</item>
+        <item name="colorOutline">@color/md_theme_dark_outline</item>
+        <item name="colorOnSurfaceInverse">@color/md_theme_dark_inverseOnSurface</item>
+        <item name="colorSurfaceInverse">@color/md_theme_dark_inverseSurface</item>
+        <item name="colorPrimaryInverse">@color/md_theme_dark_inversePrimary</item>
     </style>
 </resources>

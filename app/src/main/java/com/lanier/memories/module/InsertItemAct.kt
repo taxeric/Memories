@@ -7,8 +7,6 @@ import android.content.Intent
 import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Build
-import androidx.appcompat.app.AppCompatActivity
-import android.os.Bundle
 import android.os.Environment
 import android.provider.MediaStore
 import android.widget.Button
@@ -38,6 +36,7 @@ import com.google.android.material.snackbar.Snackbar
 import com.lanier.memories.helper.MemoriesRoomHelper
 import com.lanier.memories.R
 import com.lanier.memories.RefreshItemFlow
+import com.lanier.memories.base.BaseAct
 import com.lanier.memories.entity.MemoriesData
 import com.lanier.memories.start
 import kotlinx.coroutines.Dispatchers
@@ -46,7 +45,9 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.File
 
-class InsertItemAct : AppCompatActivity() {
+class InsertItemAct(
+    override val layoutId: Int = R.layout.activity_insert_item
+) : BaseAct() {
 
     private val ivPic by lazy {
         findViewById<ShapeableImageView>(R.id.ivPic)
@@ -88,10 +89,7 @@ class InsertItemAct : AppCompatActivity() {
         }
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_insert_item)
-
+    override fun initViews() {
         ivPic.setOnClickListener {
             selectPicResult.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
         }
