@@ -4,8 +4,6 @@ import android.animation.ValueAnimator
 import android.content.DialogInterface
 import android.graphics.Color
 import android.net.Uri
-import androidx.appcompat.app.AppCompatActivity
-import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -22,6 +20,7 @@ import com.lanier.memories.MemoriesItemFlow
 import com.lanier.memories.entity.OnItemListener
 import com.lanier.memories.R
 import com.lanier.memories.RefreshItemFlow
+import com.lanier.memories.base.BaseAct
 import com.lanier.memories.entity.MemoriesData
 import com.lanier.memories.invisible
 import com.lanier.memories.smoothScrollToPosition2
@@ -29,7 +28,9 @@ import com.lanier.memories.start
 import com.lanier.memories.visible
 import kotlinx.coroutines.launch
 
-class MainActivity : AppCompatActivity() {
+class MainActivity(
+    override val layoutId: Int = R.layout.activity_main
+) : BaseAct() {
 
     private val vm by viewModels<MainVM>()
 
@@ -60,10 +61,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
-
+    override fun initViews() {
         mAdapter = MA(rv).apply {
             listener = object : OnItemListener<MemoriesData> {
                 override fun onItemClickListener(index: Int, item: MemoriesData) {

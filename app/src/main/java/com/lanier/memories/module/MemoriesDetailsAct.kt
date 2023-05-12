@@ -1,15 +1,11 @@
 package com.lanier.memories.module
 
-import android.graphics.Color
 import android.net.Uri
 import android.os.Build
-import android.os.Bundle
 import android.view.View
 import android.view.ViewTreeObserver
-import android.view.WindowManager
 import android.widget.TextView
 import androidx.annotation.RequiresApi
-import androidx.appcompat.app.AppCompatActivity
 import androidx.documentfile.provider.DocumentFile
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
@@ -19,17 +15,19 @@ import com.google.android.material.imageview.ShapeableImageView
 import com.lanier.memories.MemoriesItemFlow
 import com.lanier.memories.helper.MemoriesRoomHelper
 import com.lanier.memories.R
+import com.lanier.memories.base.BaseAct
 import com.lanier.memories.entity.MemoriesData
 import com.lanier.memories.toTime
 import kotlinx.coroutines.launch
-
 
 /**
  * Author: Turtledove
  * Date  : on 2023/5/9
  * Desc  :
  */
-class MemoriesDetailsAct: AppCompatActivity() {
+class MemoriesDetailsAct(
+    override val layoutId: Int = R.layout.activity_details,
+) : BaseAct() {
 
     private val toolbar by lazy {
         findViewById<MaterialToolbar>(R.id.toolbar)
@@ -46,13 +44,10 @@ class MemoriesDetailsAct: AppCompatActivity() {
 
     private var mMemoriesDataId = -1
 
+    override val immersiveStatusBar = true
+
     @RequiresApi(Build.VERSION_CODES.R)
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_details)
-
-        immersive()
-
+    override fun initViews() {
         println(">>>> $intent")
         mMemoriesDataId = intent.getIntExtra("M_ID", -1)
 
@@ -80,21 +75,6 @@ class MemoriesDetailsAct: AppCompatActivity() {
                 ivPic.layoutParams = params
             }
         })
-    }
-
-    private fun immersive() {
-        window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
-        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
-        var systemUiVisibility = window.decorView.systemUiVisibility
-        systemUiVisibility =
-            systemUiVisibility or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-        window.decorView.systemUiVisibility = systemUiVisibility
-        window.statusBarColor = Color.TRANSPARENT
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            val sui = window.decorView.systemUiVisibility or View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
-            window.decorView.systemUiVisibility = sui
-        }
     }
 
     private fun bindMemories(memoriesData: MemoriesData) {
