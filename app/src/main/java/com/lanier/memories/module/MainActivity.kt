@@ -16,6 +16,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.imageview.ShapeableImageView
 import com.lanier.memories.MemoriesItemFlow
@@ -23,7 +24,9 @@ import com.lanier.memories.entity.OnItemListener
 import com.lanier.memories.R
 import com.lanier.memories.RefreshItemFlow
 import com.lanier.memories.base.BaseAct
+import com.lanier.memories.entity.AppPreferenceEntity
 import com.lanier.memories.entity.MemoriesData
+import com.lanier.memories.helper.ThemeHelper
 import com.lanier.memories.invisible
 import com.lanier.memories.smoothScrollToPosition2
 import com.lanier.memories.start
@@ -36,6 +39,9 @@ class MainActivity(
 
     private val vm by viewModels<MainVM>()
 
+    private val mToolbar by lazy {
+        findViewById<MaterialToolbar>(R.id.toolbar)
+    }
     private val rv by lazy {
         findViewById<RecyclerView>(R.id.recyclerView)
     }
@@ -63,8 +69,16 @@ class MainActivity(
         }
     }
 
+    private var darkMode = false
+
     override fun initViews() {
-        setSupportActionBar(findViewById(R.id.toolbar))
+        darkMode = (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
+        mToolbar.run {
+            setBackgroundColor(getPrimaryColor(darkMode))
+            setTitle(R.string.app_name)
+            setTitleTextColor(getOnPrimaryColor(darkMode))
+        }
+        setSupportActionBar(mToolbar)
         mAdapter = MA(rv).apply {
             listener = object : OnItemListener<MemoriesData> {
                 override fun onItemClickListener(index: Int, item: MemoriesData) {
@@ -133,9 +147,9 @@ class MainActivity(
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.main_menu, menu)
         val item = menu.findItem(R.id.menu_preference)
-        val darkMode = (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
         item.setIcon(if (darkMode) R.drawable.baseline_auto_awesome_24_dark else R.drawable.baseline_auto_awesome_24_light)
         item.setOnMenuItemClickListener {
+            start<SettingAct> {  }
             true
         }
         return true
