@@ -4,6 +4,12 @@
         <!-- Customize your dark theme here. -->
     </style>
 
+    <style name="CommonToolbarStyle" parent="Theme.MaterialComponents.DayNight">
+        <item name="android:background">@color/md_theme_dark_primary</item>
+        <item name="title">@string/app_name</item>
+        <item name="titleTextColor">@color/md_theme_dark_onPrimary</item>
+    </style>
+
     <style name="Base.Theme.Blue" parent="Base.Theme.Memories">
         <item name="colorPrimary">@color/md_theme_dark_primary</item>
         <item name="colorOnPrimary">@color/md_theme_dark_onPrimary</item>

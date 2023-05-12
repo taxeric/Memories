@@ -2,9 +2,11 @@ package com.lanier.memories.module
 
 import android.animation.ValueAnimator
 import android.content.DialogInterface
+import android.content.res.Configuration
 import android.graphics.Color
 import android.net.Uri
 import android.view.LayoutInflater
+import android.view.Menu
 import android.view.View
 import android.view.ViewGroup
 import androidx.activity.viewModels
@@ -62,6 +64,7 @@ class MainActivity(
     }
 
     override fun initViews() {
+        setSupportActionBar(findViewById(R.id.toolbar))
         mAdapter = MA(rv).apply {
             listener = object : OnItemListener<MemoriesData> {
                 override fun onItemClickListener(index: Int, item: MemoriesData) {
@@ -125,6 +128,17 @@ class MainActivity(
             }
 
         refreshFunc.invoke(true)
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        menuInflater.inflate(R.menu.main_menu, menu)
+        val item = menu.findItem(R.id.menu_preference)
+        val darkMode = (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
+        item.setIcon(if (darkMode) R.drawable.baseline_auto_awesome_24_dark else R.drawable.baseline_auto_awesome_24_light)
+        item.setOnMenuItemClickListener {
+            true
+        }
+        return true
     }
 
     private val rvScrollListener = object : RecyclerView.OnScrollListener() {
