@@ -8,4 +8,9 @@
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"/>
+
+    <androidx.compose.ui.platform.ComposeView
+        android:id="@+id/composeSetTheme"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
 </LinearLayout>
