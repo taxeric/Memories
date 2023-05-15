@@ -19,13 +19,12 @@ import java.io.OutputStream
  * Date  : on 2023/5/10
  * Desc  :
  */
-@Deprecated("使用 MemoriesGlanceDefinition2 代替")
-object MemoriesGlanceDefinition: GlanceStateDefinition<List<MemoriesData>> {
+object MemoriesGlanceDefinition2: GlanceStateDefinition<MemoriesData> {
 
     private const val DATASTORE_FILE = "memoriesDatastoreFile"
     private val Context.datastore by dataStore(DATASTORE_FILE, MemoriesSerializer)
 
-    override suspend fun getDataStore(context: Context, fileKey: String): DataStore<List<MemoriesData>> {
+    override suspend fun getDataStore(context: Context, fileKey: String): DataStore<MemoriesData> {
         return context.datastore
     }
 
@@ -33,15 +32,15 @@ object MemoriesGlanceDefinition: GlanceStateDefinition<List<MemoriesData>> {
         return context.dataStoreFile(DATASTORE_FILE)
     }
 
-    object MemoriesSerializer: Serializer<List<MemoriesData>> {
-        override val defaultValue: List<MemoriesData>
-            get() = emptyList()
+    object MemoriesSerializer: Serializer<MemoriesData> {
+        override val defaultValue: MemoriesData
+            get() = MemoriesData.default
 
-        override suspend fun readFrom(input: InputStream): List<MemoriesData> {
+        override suspend fun readFrom(input: InputStream): MemoriesData {
             return Json.decodeFromString(input.readBytes().decodeToString())
         }
 
-        override suspend fun writeTo(t: List<MemoriesData>, output: OutputStream) {
+        override suspend fun writeTo(t: MemoriesData, output: OutputStream) {
             output.use {
                 it.write(
                     Json.encodeToString(t).encodeToByteArray()

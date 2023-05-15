@@ -1,6 +1,8 @@
 package com.lanier.memories.glance
 
+import android.appwidget.AppWidgetManager
 import android.content.Context
+import android.content.Intent
 import androidx.glance.appwidget.GlanceAppWidget
 import androidx.glance.appwidget.GlanceAppWidgetReceiver
 
@@ -12,6 +14,29 @@ import androidx.glance.appwidget.GlanceAppWidgetReceiver
 class MemoriesGlanceReceiver: GlanceAppWidgetReceiver() {
     override val glanceAppWidget: GlanceAppWidget
         get() = MemoriesGlanceWidget()
+
+    override fun onUpdate(
+        context: Context,
+        appWidgetManager: AppWidgetManager,
+        appWidgetIds: IntArray
+    ) {
+        super.onUpdate(context, appWidgetManager, appWidgetIds)
+        println(">>>> on update")
+    }
+
+    override fun onReceive(context: Context, intent: Intent) {
+        super.onReceive(context, intent)
+        intent.action?.let {
+            println(">>>> on received $it")
+            when (it) {
+                MemoriesGlanceAction.NEXT.name -> {
+                    println(">>>> 执行next work")
+                    MemoriesGlanceWorker.nextMemories(context)
+                }
+                else -> {}
+            }
+        }
+    }
 
     override fun onEnabled(context: Context) {
         super.onEnabled(context)
