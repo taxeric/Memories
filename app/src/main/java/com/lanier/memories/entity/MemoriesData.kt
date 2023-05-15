@@ -23,5 +23,9 @@ data class MemoriesData(
     @ColumnInfo(name = "show_in_glance") val showInGlance: Boolean = false,
 ) {
 
+    companion object {
+        val default = MemoriesData(name = "unknown", path = "")
+    }
+
     @Ignore var uriValid: Boolean = true
 }
