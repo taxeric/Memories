@@ -1,5 +1,7 @@
 package com.lanier.memories.glance
 
+import android.content.Context
+import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.ImageDecoder
 import android.net.Uri
@@ -15,10 +17,13 @@ import androidx.glance.Button
 import androidx.glance.GlanceModifier
 import androidx.glance.Image
 import androidx.glance.LocalContext
+import androidx.glance.action.Action
 import androidx.glance.action.ActionParameters
 import androidx.glance.action.actionParametersOf
 import androidx.glance.action.actionStartActivity
+import androidx.glance.action.clickable
 import androidx.glance.appwidget.GlanceAppWidget
+import androidx.glance.appwidget.action.actionSendBroadcast
 import androidx.glance.appwidget.cornerRadius
 import androidx.glance.background
 import androidx.glance.color.dynamicThemeColorProviders
@@ -54,7 +59,8 @@ class MemoriesGlanceWidget: GlanceAppWidget() {
 
     @Composable
     override fun Content() {
-        val memoriesDataList = currentState<List<MemoriesData>>()
+        val memoriesData = currentState<MemoriesData>()
+        println(">>>> refresh content $memoriesData")
         Row(
             modifier = GlanceModifier
                 .fillMaxSize()
@@ -63,8 +69,7 @@ class MemoriesGlanceWidget: GlanceAppWidget() {
 //                    if (isSystemInDarkTheme()) Color(0xFFECDDFE) else Color(0xFF7F5FA5)
                 )
         ) {
-            if (memoriesDataList.isNotEmpty()) {
-                val memoriesData = memoriesDataList[0]
+            if (memoriesData.path.isNotEmpty()) {
                 val bitmap = obtainBitmap(Uri.parse(memoriesData.path))
                 Column(
                     modifier = GlanceModifier
@@ -115,6 +120,14 @@ class MemoriesGlanceWidget: GlanceAppWidget() {
                         modifier = GlanceModifier
                             .size(50.dp)
                             .cornerRadius(8.dp)
+                            .clickable(
+                                onClick = actionStartActivity(
+                                    MemoriesDetailsAct::class.java,
+                                    actionParametersOf(
+                                        ActionParameters.Key<Int>("M_ID") to memoriesData.id
+                                    )
+                                )
+                            )
                     )
                     Spacer(
                         modifier = GlanceModifier
@@ -126,12 +139,7 @@ class MemoriesGlanceWidget: GlanceAppWidget() {
                         style = TextStyle(
                             textAlign = TextAlign.Center
                         ),
-                        onClick = actionStartActivity(
-                            MemoriesDetailsAct::class.java,
-                            actionParametersOf(
-                                ActionParameters.Key<Int>("M_ID") to memoriesData.id
-                            )
-                        ),
+                        onClick = sendReceiver(LocalContext.current, MemoriesGlanceAction.NEXT),
                         modifier = GlanceModifier
                             .width(80.dp)
                     )
@@ -167,6 +175,14 @@ class MemoriesGlanceWidget: GlanceAppWidget() {
         }
     }
 
+    private fun sendReceiver(context: Context, memoriesAction: MemoriesGlanceAction): Action {
+        val intent = Intent(context, MemoriesGlanceReceiver::class.java).apply {
+            action = memoriesAction.name
+        }
+        val action1 = actionSendBroadcast(intent)
+        return action1
+    }
+
     override val stateDefinition: GlanceStateDefinition<*>
-        get() = MemoriesGlanceDefinition
+        get() = MemoriesGlanceDefinition2
 }
