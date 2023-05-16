@@ -10,8 +10,10 @@ import android.os.Build
 import android.os.Environment
 import android.provider.MediaStore
 import android.widget.Button
+import android.widget.LinearLayout
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.widget.ContentFrameLayout
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -39,6 +41,7 @@ import com.lanier.memories.RefreshItemFlow
 import com.lanier.memories.base.BaseAct
 import com.lanier.memories.entity.MemoriesData
 import com.lanier.memories.start
+import com.lanier.memories.widget.ParticleHelper
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
@@ -60,6 +63,9 @@ class InsertItemAct(
     }
     private val msTagFavourite by lazy {
         findViewById<MaterialSwitch>(R.id.msTagFavorite)
+    }
+    private val topView by lazy {
+        findViewById<ContentFrameLayout>(android.R.id.content)
     }
 
     private val pictureFlow = MutableStateFlow<Uri?>(null)
@@ -90,44 +96,31 @@ class InsertItemAct(
     }
 
     override fun initViews() {
+        ParticleHelper.initRes(
+            resources,
+            ids = intArrayOf(
+                R.drawable.ic_xls,
+                R.drawable.ic_mgdd,
+                R.drawable.ic_lm,
+                R.drawable.ic_xls,
+                R.drawable.ic_mgdd,
+                R.drawable.ic_lm,
+                R.drawable.ic_xls,
+                R.drawable.ic_mgdd,
+                R.drawable.ic_lm,
+                R.drawable.ic_xls,
+                R.drawable.ic_mgdd,
+                R.drawable.ic_lm,
+            ),
+            topView
+        )
         ivPic.setOnClickListener {
             selectPicResult.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
         }
         findViewById<Button>(R.id.btnAdd)
             .setOnClickListener {
-                val uri = pictureFlow.value
-                uri?.let {
-                    lifecycleScope.launch {
-                        val data = MemoriesData(
-                            path = uri.toString(),
-                            name = editName.ifEmpty { "default" },
-                            desc = editDesc.ifEmpty { "default" },
-                            time = System.currentTimeMillis(),
-                            favourite = msTagFavourite.isChecked,
-                            showInGlance = msShowInGlance.isChecked
-                        )
-                        withContext(Dispatchers.IO) {
-                            MemoriesRoomHelper.insertMemories(
-                                data
-                            )
-                        }
-                        RefreshItemFlow.tryEmit(RefreshItemFlow.value + 1)
-                        try {
-                            val ams = getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
-                            val tasks = ams.appTasks
-                            if (tasks.size == 1) {
-                                val task = tasks[0]
-                                if (task.taskInfo.numActivities == 1) {
-                                    start<MainActivity> {  }
-                                }
-                            }
-                        } finally {
-                            finish()
-                        }
-                    }
-                }?: Snackbar
-                    .make(findViewById(android.R.id.content), "invalid", Snackbar.LENGTH_SHORT)
-                    .show()
+                ParticleHelper.start(it, topView)
+//                apply()
             }
 
         findViewById<ComposeView>(R.id.composeEditName)
@@ -149,6 +142,42 @@ class InsertItemAct(
                     }
                 )
             }
+    }
+
+    private fun apply() {
+        val uri = pictureFlow.value
+        uri?.let {
+            lifecycleScope.launch {
+                val data = MemoriesData(
+                    path = uri.toString(),
+                    name = editName.ifEmpty { "default" },
+                    desc = editDesc.ifEmpty { "default" },
+                    time = System.currentTimeMillis(),
+                    favourite = msTagFavourite.isChecked,
+                    showInGlance = msShowInGlance.isChecked
+                )
+                withContext(Dispatchers.IO) {
+                    MemoriesRoomHelper.insertMemories(
+                        data
+                    )
+                }
+                RefreshItemFlow.tryEmit(RefreshItemFlow.value + 1)
+                try {
+                    val ams = getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
+                    val tasks = ams.appTasks
+                    if (tasks.size == 1) {
+                        val task = tasks[0]
+                        if (task.taskInfo.numActivities == 1) {
+                            start<MainActivity> {  }
+                        }
+                    }
+                } finally {
+                    finish()
+                }
+            }
+        }?: Snackbar
+            .make(findViewById(android.R.id.content), "invalid", Snackbar.LENGTH_SHORT)
+            .show()
     }
 
     private fun bindUri(uri: Uri) {
