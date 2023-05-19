@@ -3,10 +3,11 @@ package com.lanier.memories.datastore
 import android.content.Context
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
-import com.lanier.memories.entity.AppPreferenceEntity
+import com.lanier.memories.entity.AppPreferenceCache
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.runBlocking
@@ -27,8 +28,10 @@ class AppPreference(
     companion object {
 
         private const val P_K_THEME = "p_k_theme"
+        private const val P_K_BLAST_ANIM_ENABLE = "p_k_blast_anim_enable"
 
         val KeyThemeValue = intPreferencesKey(P_K_THEME)
+        val KeyBlastAnim = booleanPreferencesKey(P_K_BLAST_ANIM_ENABLE)
     }
 
     val data = context.appDataStore.data
@@ -36,9 +39,8 @@ class AppPreference(
     val appPreferenceFlow = context.appDataStore
         .data
         .map {
-            AppPreferenceEntity(
-                defaultTheme = it[KeyThemeValue]?: 0
-            )
+            AppPreferenceCache.curThemeValue = it[KeyThemeValue]?: 0
+            AppPreferenceCache.enabledBlastAnim = it[KeyBlastAnim]?: true
         }
 
     fun getTheme(): Int {
@@ -49,6 +51,15 @@ class AppPreference(
         context.appDataStore
             .edit {
                 it[KeyThemeValue] = value
+            }
+    }
+
+    fun isEnabledBlastAnim() = runBlocking { context.appDataStore.data.first() }[KeyBlastAnim]?: true
+
+    suspend fun enabledBlastAnim(enabled: Boolean) {
+        context.appDataStore
+            .edit {
+                it[KeyBlastAnim] = enabled
             }
     }
 }

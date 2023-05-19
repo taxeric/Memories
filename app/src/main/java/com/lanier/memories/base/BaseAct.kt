@@ -7,9 +7,8 @@ import android.view.View
 import android.view.WindowManager
 import androidx.appcompat.app.AppCompatActivity
 import com.lanier.memories.datastore.AppPreference
-import com.lanier.memories.entity.AppPreferenceEntity
+import com.lanier.memories.entity.AppPreferenceCache
 import com.lanier.memories.R
-import com.lanier.memories.helper.ThemeHelper
 
 /**
  * Author: Turtledove
@@ -23,19 +22,19 @@ abstract class BaseAct: AppCompatActivity() {
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        if (ThemeHelper.curThemeValue == -1) {
-            ThemeHelper.curThemeValue = preferenceDataStore.getTheme()
-            ThemeHelper.curTheme = when (ThemeHelper.curThemeValue) {
-                AppPreferenceEntity.ThemeDefault -> R.style.Base_Theme_Memories
-                AppPreferenceEntity.ThemeBlue -> R.style.Base_Theme_Blue
+        if (AppPreferenceCache.curThemeValue == -1) {
+            AppPreferenceCache.curThemeValue = preferenceDataStore.getTheme()
+            AppPreferenceCache.curTheme = when (AppPreferenceCache.curThemeValue) {
+                AppPreferenceCache.ThemeDefault -> R.style.Base_Theme_Memories
+                AppPreferenceCache.ThemeBlue -> R.style.Base_Theme_Blue
                 else -> R.style.Base_Theme_Memories
             }
-            if (ThemeHelper.curThemeValue == -1) {
-                ThemeHelper.curThemeValue = 0
+            if (AppPreferenceCache.curThemeValue == -1) {
+                AppPreferenceCache.curThemeValue = 0
             }
         }
         super.onCreate(savedInstanceState)
-        setTheme(ThemeHelper.curTheme)
+        setTheme(AppPreferenceCache.curTheme)
         setContentView(layoutId)
         if (immersiveStatusBar) {
             immersive()
@@ -48,15 +47,15 @@ abstract class BaseAct: AppCompatActivity() {
     protected open fun initViews(){}
 
     protected open fun getPrimaryColor(darkMode: Boolean): Int {
-        return when (ThemeHelper.curThemeValue) {
-            AppPreferenceEntity.ThemeDefault -> {
+        return when (AppPreferenceCache.curThemeValue) {
+            AppPreferenceCache.ThemeDefault -> {
                 if (darkMode) {
                     Color.rgb(209, 188, 255)
                 } else {
                     Color.rgb(105, 79, 163)
                 }
             }
-            AppPreferenceEntity.ThemeBlue -> {
+            AppPreferenceCache.ThemeBlue -> {
                 if (darkMode) {
                     Color.rgb(175, 198, 255)
                 } else {
@@ -74,15 +73,15 @@ abstract class BaseAct: AppCompatActivity() {
     }
 
     protected open fun getOnPrimaryColor(darkMode: Boolean): Int {
-        return when (ThemeHelper.curThemeValue) {
-            AppPreferenceEntity.ThemeDefault -> {
+        return when (AppPreferenceCache.curThemeValue) {
+            AppPreferenceCache.ThemeDefault -> {
                 if (darkMode) {
                     Color.rgb(58, 29, 113)
                 } else {
                     Color.WHITE
                 }
             }
-            AppPreferenceEntity.ThemeBlue -> {
+            AppPreferenceCache.ThemeBlue -> {
                 if (darkMode) {
                     Color.rgb(0, 45, 109)
                 } else {

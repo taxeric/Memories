@@ -4,11 +4,13 @@ import android.animation.Animator
 import android.animation.Animator.AnimatorListener
 import android.animation.AnimatorListenerAdapter
 import android.animation.ObjectAnimator
+import android.animation.ValueAnimator
 import android.app.Activity
 import android.content.res.Resources
 import android.graphics.BitmapFactory
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.animation.addListener
 import com.lanier.memories.entity.Particle
 import kotlin.math.cos
 import kotlin.math.sin
@@ -36,7 +38,11 @@ object ParticleHelper {
         topView.getLocationInWindow(parentLocation)
     }
 
-    fun start(emiter: View, topView: View) {
+    fun start(
+        emiter: View,
+        topView: View,
+        onAnimEnd: () -> Unit = {},
+    ) {
         val location = IntArray(2)
         emiter.getLocationInWindow(location)
         startX = (location[0] + emiter.width / 2 - parentLocation[0]).toFloat()
@@ -46,10 +52,14 @@ object ParticleHelper {
         val particleView = ParticleView(topView.context)
         (topView as ViewGroup).addView(particleView)
         particleView.resetParticles(particles)
-        startAnim(particleView, topView)
+        startAnim(particleView, topView, onAnimEnd)
     }
 
-    private fun startAnim(particleView: ParticleView, topView: ViewGroup) {
+    private fun startAnim(
+        particleView: ParticleView,
+        topView: ViewGroup,
+        onAnimEnd: () -> Unit,
+    ) {
         val animator = ObjectAnimator.ofInt(0, 1)
             .setDuration(1000L)
         animator.addUpdateListener { listener ->
@@ -63,6 +73,8 @@ object ParticleHelper {
             override fun onAnimationEnd(animation: Animator) {
                 topView.removeView(particleView)
                 topView.postInvalidate()
+                onAnimEnd.invoke()
+                animator.removeListener(this)
             }
         })
         animator.start()

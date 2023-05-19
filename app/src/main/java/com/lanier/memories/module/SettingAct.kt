@@ -22,6 +22,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
+import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -42,8 +43,7 @@ import androidx.compose.ui.window.DialogProperties
 import com.google.android.material.appbar.MaterialToolbar
 import com.lanier.memories.base.BaseAct
 import com.lanier.memories.R
-import com.lanier.memories.entity.AppPreferenceEntity
-import com.lanier.memories.helper.ThemeHelper
+import com.lanier.memories.entity.AppPreferenceCache
 import kotlinx.coroutines.runBlocking
 
 /**
@@ -80,13 +80,24 @@ class SettingAct(
         findViewById<ComposeView>(R.id.composeSetTheme)
             .setContent {
                 SetTheme(
-                    helper = ThemeHelper
+                    helper = AppPreferenceCache
                 ) {
                     if (it != -1) {
                         runBlocking { preferenceDataStore.setTheme(it) }
                         restartApp()
                     }
                 }
+            }
+
+        val blastAnimEnabled = preferenceDataStore.isEnabledBlastAnim()
+        findViewById<ComposeView>(R.id.composeEnableBlastAnim)
+            .setContent {
+                BlastAnimEnabled(
+                    checked = blastAnimEnabled,
+                    onChanged = {
+                        runBlocking { preferenceDataStore.enabledBlastAnim(it) }
+                    }
+                )
             }
     }
 
@@ -100,7 +111,7 @@ class SettingAct(
 
 @Composable
 private fun SetTheme(
-    helper: ThemeHelper,
+    helper: AppPreferenceCache,
     onChoose: (Int) -> Unit
 ) {
     var showDialog by remember {
@@ -140,8 +151,8 @@ private fun SetTheme(
                     modifier = Modifier
                         .background(
                             color = when (helper.curThemeValue) {
-                                AppPreferenceEntity.ThemeDefault -> Color(0xFF694FA3)
-                                AppPreferenceEntity.ThemeBlue -> Color(0xFF365CA8)
+                                AppPreferenceCache.ThemeDefault -> Color(0xFF694FA3)
+                                AppPreferenceCache.ThemeBlue -> Color(0xFF365CA8)
                                 else -> Color(0xFF694FA3)
                             },
                             shape = CircleShape
@@ -160,6 +171,47 @@ private fun SetTheme(
                 onChoose.invoke(it)
             }
         )
+    }
+}
+
+@Composable
+private fun BlastAnimEnabled(
+    checked: Boolean,
+    onChanged: (Boolean) -> Unit
+) {
+    var mCheck by remember {
+        mutableStateOf(checked)
+    }
+    Surface(
+        modifier = Modifier
+            .background(MaterialTheme.colorScheme.background)
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp, 20.dp),
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            Column(
+                modifier = Modifier
+                    .weight(3f)
+                    .padding(end = 8.dp)
+            ) {
+                Text(
+                    text = "新增Memories启用动画",
+                    maxLines = 1,
+                    style = MaterialTheme.typography.titleLarge.copy(fontSize = 19.sp),
+                    color = MaterialTheme.colorScheme.onSurface.applyOpacity(true)
+                )
+            }
+            Switch(
+                checked = mCheck,
+                onCheckedChange = {
+                    mCheck = it
+                    onChanged.invoke(it)
+                }
+            )
+        }
     }
 }
 
@@ -207,14 +259,14 @@ private fun SetThemeDialog(
                 horizontalArrangement = Arrangement.Center,
             ) {
                 SetThemeDialogColor(
-                    choice = curTheme == AppPreferenceEntity.ThemeDefault,
+                    choice = curTheme == AppPreferenceCache.ThemeDefault,
                     color = Color(0xFF694FA3),
                 ) {
                     onClose.invoke(0)
                 }
                 Spacer(modifier = Modifier.width(8.dp))
                 SetThemeDialogColor(
-                    choice = curTheme == AppPreferenceEntity.ThemeBlue,
+                    choice = curTheme == AppPreferenceCache.ThemeBlue,
                     color = Color(0xFF365CA8)
                 ) {
                     onClose.invoke(1)

@@ -72,6 +72,8 @@ class InsertItemAct(
     private var editName: String = ""
     private var editDesc: String = ""
 
+    private var enabledAnim = true
+
     private val selectPicResult = registerForActivityResult(
         ActivityResultContracts.PickVisualMedia()
     ) {
@@ -96,31 +98,39 @@ class InsertItemAct(
     }
 
     override fun initViews() {
-        ParticleHelper.initRes(
-            resources,
-            ids = intArrayOf(
-                R.drawable.ic_xls,
-                R.drawable.ic_mgdd,
-                R.drawable.ic_lm,
-                R.drawable.ic_xls,
-                R.drawable.ic_mgdd,
-                R.drawable.ic_lm,
-                R.drawable.ic_xls,
-                R.drawable.ic_mgdd,
-                R.drawable.ic_lm,
-                R.drawable.ic_xls,
-                R.drawable.ic_mgdd,
-                R.drawable.ic_lm,
-            ),
-            topView
-        )
+        enabledAnim = preferenceDataStore.isEnabledBlastAnim()
+        if (enabledAnim) {
+            ParticleHelper.initRes(
+                resources,
+                ids = intArrayOf(
+                    R.drawable.ic_xls,
+                    R.drawable.ic_mgdd,
+                    R.drawable.ic_lm,
+                    R.drawable.ic_xls,
+                    R.drawable.ic_mgdd,
+                    R.drawable.ic_lm,
+                    R.drawable.ic_xls,
+                    R.drawable.ic_mgdd,
+                    R.drawable.ic_lm,
+                    R.drawable.ic_xls,
+                    R.drawable.ic_mgdd,
+                    R.drawable.ic_lm,
+                ),
+                topView
+            )
+        }
         ivPic.setOnClickListener {
             selectPicResult.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
         }
         findViewById<Button>(R.id.btnAdd)
             .setOnClickListener {
-                ParticleHelper.start(it, topView)
-//                apply()
+                if (enabledAnim) {
+                    ParticleHelper.start(it, topView) {
+                        apply()
+                    }
+                } else {
+                    apply()
+                }
             }
 
         findViewById<ComposeView>(R.id.composeEditName)
