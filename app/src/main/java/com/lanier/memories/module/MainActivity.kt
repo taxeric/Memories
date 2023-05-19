@@ -24,9 +24,7 @@ import com.lanier.memories.entity.OnItemListener
 import com.lanier.memories.R
 import com.lanier.memories.RefreshItemFlow
 import com.lanier.memories.base.BaseAct
-import com.lanier.memories.entity.AppPreferenceEntity
 import com.lanier.memories.entity.MemoriesData
-import com.lanier.memories.helper.ThemeHelper
 import com.lanier.memories.invisible
 import com.lanier.memories.smoothScrollToPosition2
 import com.lanier.memories.start
